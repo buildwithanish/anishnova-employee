@@ -2,7 +2,13 @@ import { Footer } from "@/components/footer";
 import { PublicNavbar } from "@/components/public-navbar";
 import { VoiceVerifyPanel } from "@/components/voice-verify-panel";
 
-export default function VoiceVerifyPage() {
+export default function VoiceVerifyPage({
+  searchParams,
+}: {
+  searchParams?: {
+    employeeID?: string;
+  };
+}) {
   return (
     <div className="page-shell">
       <PublicNavbar />
@@ -16,7 +22,7 @@ export default function VoiceVerifyPage() {
           </p>
         </div>
 
-        <VoiceVerifyPanel />
+        <VoiceVerifyPanel initialEmployeeID={searchParams?.employeeID || ""} />
       </main>
       <Footer />
     </div>

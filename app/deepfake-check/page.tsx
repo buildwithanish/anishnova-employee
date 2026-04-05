@@ -2,7 +2,13 @@ import { DeepfakeCheckPanel } from "@/components/deepfake-check-panel";
 import { Footer } from "@/components/footer";
 import { PublicNavbar } from "@/components/public-navbar";
 
-export default function DeepfakeCheckPage() {
+export default function DeepfakeCheckPage({
+  searchParams,
+}: {
+  searchParams?: {
+    employeeID?: string;
+  };
+}) {
   return (
     <div className="page-shell">
       <PublicNavbar />
@@ -16,7 +22,7 @@ export default function DeepfakeCheckPage() {
           </p>
         </div>
 
-        <DeepfakeCheckPanel />
+        <DeepfakeCheckPanel initialEmployeeID={searchParams?.employeeID || ""} />
       </main>
       <Footer />
     </div>

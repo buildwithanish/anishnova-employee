@@ -1,8 +1,7 @@
 "use client";
 
 import { AlertTriangle, CheckCircle2, Loader2, Mic, MicOff, ShieldAlert, UploadCloud } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useMemo, useRef, useState } from "react";
 
 import { StatusBadge } from "@/components/status-badge";
 import { normalizeEmployeeId } from "@/lib/utils";
@@ -133,12 +132,15 @@ function calculateAudioQuality(samples: Float32Array, duration: number) {
   return Math.round(durationScore * 0.3 + signalScore * 0.35 + varianceScore * 0.35);
 }
 
-export function VoiceVerifyPanel() {
-  const searchParams = useSearchParams();
+export function VoiceVerifyPanel({
+  initialEmployeeID = "",
+}: {
+  initialEmployeeID?: string;
+}) {
   const recorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
-  const [employeeID, setEmployeeID] = useState("");
+  const [employeeID, setEmployeeID] = useState(initialEmployeeID);
   const [employee, setEmployee] = useState<LookupEmployee | null>(null);
   const [lookupError, setLookupError] = useState("");
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
@@ -158,13 +160,6 @@ export function VoiceVerifyPanel() {
   );
 
   const canVerify = useMemo(() => Boolean(employee && audioBlob && transcript.trim()), [audioBlob, employee, transcript]);
-
-  useEffect(() => {
-    const nextEmployeeID = searchParams.get("employeeID");
-    if (nextEmployeeID) {
-      setEmployeeID(nextEmployeeID);
-    }
-  }, [searchParams]);
 
   const lookupEmployee = async () => {
     const normalized = normalizeEmployeeId(employeeID);

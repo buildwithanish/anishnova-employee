@@ -2,7 +2,13 @@ import { FaceVerifyPanel } from "@/components/face-verify-panel";
 import { Footer } from "@/components/footer";
 import { PublicNavbar } from "@/components/public-navbar";
 
-export default function FaceVerifyPage() {
+export default function FaceVerifyPage({
+  searchParams,
+}: {
+  searchParams?: {
+    employeeID?: string;
+  };
+}) {
   return (
     <div className="page-shell">
       <PublicNavbar />
@@ -16,7 +22,7 @@ export default function FaceVerifyPage() {
           </p>
         </div>
 
-        <FaceVerifyPanel />
+        <FaceVerifyPanel initialEmployeeID={searchParams?.employeeID || ""} />
       </main>
       <Footer />
     </div>

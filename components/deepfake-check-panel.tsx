@@ -1,8 +1,7 @@
 "use client";
 
 import { AlertTriangle, Loader2, ShieldAlert, ShieldCheck, UploadCloud } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useMemo, useState } from "react";
 
 import { StatusBadge } from "@/components/status-badge";
 import { normalizeEmployeeId } from "@/lib/utils";
@@ -118,9 +117,12 @@ function analyzeRisk(input: { dimension: number; vector: number[]; similarity?: 
   } as const;
 }
 
-export function DeepfakeCheckPanel() {
-  const searchParams = useSearchParams();
-  const [employeeID, setEmployeeID] = useState("");
+export function DeepfakeCheckPanel({
+  initialEmployeeID = "",
+}: {
+  initialEmployeeID?: string;
+}) {
+  const [employeeID, setEmployeeID] = useState(initialEmployeeID);
   const [employee, setEmployee] = useState<LookupEmployee | null>(null);
   const [lookupError, setLookupError] = useState("");
   const [uploadedPhoto, setUploadedPhoto] = useState("");
@@ -129,13 +131,6 @@ export function DeepfakeCheckPanel() {
   const [result, setResult] = useState<ScanResult | null>(null);
 
   const canScan = useMemo(() => Boolean(employee && uploadedPhoto), [employee, uploadedPhoto]);
-
-  useEffect(() => {
-    const nextEmployeeID = searchParams.get("employeeID");
-    if (nextEmployeeID) {
-      setEmployeeID(nextEmployeeID);
-    }
-  }, [searchParams]);
 
   const lookupEmployee = async () => {
     const normalized = normalizeEmployeeId(employeeID);

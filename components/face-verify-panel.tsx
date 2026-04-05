@@ -1,8 +1,7 @@
 "use client";
 
 import { AlertTriangle, CheckCircle2, Loader2, ScanFace, ShieldAlert, UploadCloud } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useMemo, useState } from "react";
 
 import { StatusBadge } from "@/components/status-badge";
 import { normalizeEmployeeId } from "@/lib/utils";
@@ -87,9 +86,12 @@ function compareVectors(source: number[], target: number[]) {
   return Math.max(0, Math.min(1, cosine * 0.7 + diffScore * 0.3));
 }
 
-export function FaceVerifyPanel() {
-  const searchParams = useSearchParams();
-  const [employeeID, setEmployeeID] = useState("");
+export function FaceVerifyPanel({
+  initialEmployeeID = "",
+}: {
+  initialEmployeeID?: string;
+}) {
+  const [employeeID, setEmployeeID] = useState(initialEmployeeID);
   const [employee, setEmployee] = useState<LookupEmployee | null>(null);
   const [lookupError, setLookupError] = useState("");
   const [uploadedPhoto, setUploadedPhoto] = useState("");
@@ -98,13 +100,6 @@ export function FaceVerifyPanel() {
   const [result, setResult] = useState<VerificationResult | null>(null);
 
   const canVerify = useMemo(() => Boolean(employee && uploadedPhoto), [employee, uploadedPhoto]);
-
-  useEffect(() => {
-    const nextEmployeeID = searchParams.get("employeeID");
-    if (nextEmployeeID) {
-      setEmployeeID(nextEmployeeID);
-    }
-  }, [searchParams]);
 
   const lookupEmployee = async () => {
     const normalized = normalizeEmployeeId(employeeID);
